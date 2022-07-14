@@ -1,15 +1,16 @@
 const button = document.getElementById('convert-button');
 const select = document.getElementById('currency-select');
 
-const dolar = 5.24
-const euro = 5.54
-const bitcoin = 110546
-const ethereum = 6322
-
-const convertValue = () => {
+const convertValue = async () => {
     const inputReais = document.getElementById('input-real').value
     const ValueReal = document.getElementById('real-value')
     const ValueDolar = document.getElementById('dolar-value')
+
+    const data = await fetch("https://economia.awesomeapi.com.br/last/USD-BRL,EUR-BRL,BTC-BRL").then(response => response.json())
+
+    const dolar = data.USDBRL.high
+    const euro = data.EURBRL.high
+    const bitcoin = data.BTCBRL.high
 
     ValueReal.innerHTML = new Intl.NumberFormat("pt-BR", {
         style: "currency",
@@ -37,13 +38,6 @@ const convertValue = () => {
         }).format(inputReais / bitcoin);
     }
 
-    if (select.value === "Ξ Ethereum") {
-        ValueDolar.innerHTML = new Intl.NumberFormat("en-US", {
-            style: "currency",
-            currency: "ETH"
-        }).format(inputReais / ethereum);
-    }
-
 };
 
 changeCurrency = () => {
@@ -63,11 +57,6 @@ changeCurrency = () => {
     if (select.value === '₿ Bitcoin') {
         paragraphText.innerHTML = "Bitcoin"
         currencyImg.src = "./assets/bitcoin.png"
-    }
-
-    if (select.value === 'Ξ Ethereum') {
-        paragraphText.innerHTML = "Ethereum"
-        currencyImg.src = "./assets/ethereummm.jpg"
     }
     convertValue()
 }
